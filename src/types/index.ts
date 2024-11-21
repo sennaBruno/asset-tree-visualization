@@ -19,3 +19,14 @@ export interface Company {
   id: string;
   name: string;
 }
+
+export interface TreeNode {
+  id: string;
+  name: string;
+  type: 'location' | 'asset' | 'component';
+  children: TreeNode[];
+  parentId?: string | null;
+  locationId?: string | null;
+  sensorType?: 'energy' | 'vibration';
+  status?: 'operating' | 'alert';
+}

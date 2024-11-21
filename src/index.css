@@ -66,3 +66,22 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.tree-view {
+  max-height: 80vh;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tree-item {
+  user-select: none;
+}
+
+.tree-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.tree-item .children {
+  border-left: 1px dashed #ccc;
+  margin-left: 12px;
+}
