@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Layout } from './components/Layout';
 import { TreeView } from './components/TreeView';
 import { TreeNode } from './types';
-import { getCompanyTree } from './services/api';
+import { companyService } from './services/api';
 
 function App() {
   const [treeData, setTreeData] = useState<TreeNode[]>([]);
@@ -11,8 +11,8 @@ function App() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await getCompanyTree('company-1');
-        setTreeData(data);
+        const data = await companyService.getCompanyTree('company-1');
+        setTreeData(data.data);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       } finally {
