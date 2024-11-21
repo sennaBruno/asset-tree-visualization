@@ -21,9 +21,18 @@ export const TreeView = ({ data, className = '' }: TreeViewProps) => {
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <SearchInput value={searchText} onChange={setSearchText} placeholder="Buscar por nome..." />
-      <TreeFilters filters={filters} onFilterChange={setFilters} />
-      <div className="tree-view border rounded-lg overflow-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-xl font-semibold">Ativos</h1>
+        <div className="flex gap-2">
+          <SearchInput
+            value={searchText}
+            onChange={setSearchText}
+            placeholder="Buscar Ativo ou Local"
+          />
+          <TreeFilters filters={filters} onFilterChange={setFilters} />
+        </div>
+      </div>
+      <div className="tree-view border border-gray-200 rounded-lg overflow-auto bg-white">
         {filteredData.map((node) => (
           <TreeItem key={node.id} node={node} />
         ))}
