@@ -6,6 +6,7 @@ interface UseCompanyDataReturn {
   companies: Company[];
   selectedCompany: Company | null;
   treeData: TreeNode[];
+  initialLoading: boolean;
   loading: boolean;
   error: string | null;
   setSelectedCompany: (company: Company) => void;
@@ -16,24 +17,30 @@ export function useCompanyData(): UseCompanyDataReturn {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [treeData, setTreeData] = useState<TreeNode[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchCompanies = async () => {
-    setLoading(true);
-    const response = await companyService.getCompanies();
-    console.log(response);
-    if (response.error) {
-      setError(response.error);
-    } else {
-      setCompanies(response.data);
-      // Seleciona a Apex como empresa padrão
-      const defaultCompany = response.data.find((c) => c.name === 'Apex');
-      if (defaultCompany) {
-        setSelectedCompany(defaultCompany);
+  const fetchInitialData = async () => {
+    try {
+      setInitialLoading(true);
+      const response = await companyService.getCompanies();
+
+      if (response.error) {
+        setError(response.error);
+        return;
       }
+
+      setCompanies(response.data);
+
+      if (response.data.length > 0) {
+        setSelectedCompany(response.data[0]);
+      }
+    } catch (error) {
+      setError('Erro ao carregar empresas');
+    } finally {
+      setInitialLoading(false);
     }
-    setLoading(false);
   };
 
   const fetchTreeData = async (companyId: string) => {
@@ -50,7 +57,7 @@ export function useCompanyData(): UseCompanyDataReturn {
   };
 
   useEffect(() => {
-    fetchCompanies();
+    fetchInitialData();
   }, []);
 
   useEffect(() => {
@@ -63,6 +70,7 @@ export function useCompanyData(): UseCompanyDataReturn {
     companies,
     selectedCompany,
     treeData,
+    initialLoading,
     loading,
     error,
     setSelectedCompany,

@@ -3,8 +3,46 @@ import { TreeView } from '../components/TreeView';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const AssetPage = () => {
-  const { companies, selectedCompany, treeData, loading, error, setSelectedCompany, refreshData } =
-    useCompanyData();
+  const {
+    companies,
+    selectedCompany,
+    treeData,
+    initialLoading,
+    loading,
+    error,
+    setSelectedCompany,
+    refreshData,
+  } = useCompanyData();
+
+  if (initialLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex justify-center items-center h-64"
+      >
+        <span className="text-gray-500">Carregando empresas...</span>
+      </motion.div>
+    );
+  }
+
+  if (error && !companies.length) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col items-center justify-center h-64 gap-4"
+      >
+        <p className="text-red-500">{error}</p>
+        <button
+          onClick={refreshData}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        >
+          Tentar novamente
+        </button>
+      </motion.div>
+    );
+  }
 
   const renderCompanyButtons = () => (
     <div className="flex gap-2 mb-6">
@@ -23,16 +61,6 @@ export const AssetPage = () => {
       ))}
     </div>
   );
-
-  if (loading && !selectedCompany) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-gray-500">
-          Carregando empresas...
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
